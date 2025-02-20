@@ -41,6 +41,7 @@ This provides an interactive interface to test and explore API endpoints.
 - **Database:** MongoDB, Mongoose
 - **Security:** Helmet.js, Rate Limiting, CORS
 - **Logging:** Morgan
+- **Validation:** Joi
 - **Documentation:** Swagger
 
 ## 📜 API Endpoints Overview
