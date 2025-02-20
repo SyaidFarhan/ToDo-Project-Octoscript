@@ -7,8 +7,30 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const ExpressError = require('./utils/ExpressError');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 dotenv.config();
 connectDB();
+
+// Swagger configuration
+const swaggerOptions = {
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'ToDo API',
+        version: '1.0.0',
+        description: 'API for managing ToDo posts',
+        contact: { name: 'API Support' },
+      },
+      servers: [{ url: 'http://localhost:5000' }]
+    },
+    apis: ['./routes/*.js']
+  };
+  
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
 
 const app = express();
 
@@ -24,7 +46,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// API Documentation Route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// API Routes
 app.use('/', todoPostRoutes)
+
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
